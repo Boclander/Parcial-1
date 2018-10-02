@@ -1,0 +1,39 @@
+# depslib dependency file v1.0
+1538481983 source:d:\oclander bruno\parcial-1\parcial 1\directores.c
+
+1538482869 source:d:\oclander bruno\parcial-1\parcial 1\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Peliculas.h"
+
+1538482805 d:\oclander bruno\parcial-1\parcial 1\peliculas.h
+
+1538483154 source:d:\oclander bruno\parcial-1\parcial 1\peliculas.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"Peliculas.h"
+
+1538481983 source:c:\users\alumno\desktop\parcial-1\parcial 1\directores.c
+
+1538489511 source:c:\users\alumno\desktop\parcial-1\parcial 1\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Peliculas.h"
+
+1538487440 c:\users\alumno\desktop\parcial-1\parcial 1\peliculas.h
+
+1538490626 source:c:\users\alumno\desktop\parcial-1\parcial 1\peliculas.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"Peliculas.h"
+
+1538480667 source:c:\users\alumno\desktop\amb-estructuragenerica\estructuragenerica.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"EstructuraGenerica.h"
+
+1538480667 c:\users\alumno\desktop\amb-estructuragenerica\estructuragenerica.h
+
