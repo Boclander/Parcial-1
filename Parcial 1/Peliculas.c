@@ -2,284 +2,321 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Peliculas.h"
-#define TAMANIO 1000
+#define MAXPELICULAS 1000
 #define OCUPADO 0
 #define LIBRE -1
+#define BORRADO 1
 
-
-
-int sPelicula_init( sPelicula listado[],int limite)
+int sPelicula_inicializarLibre(sPelicula listado[], int limite)
 {
     int retorno = -1;
     int i;
+
     if(limite > 0 && listado != NULL)
     {
         retorno = 0;
-        for(i=0; i<limite; i++)
+        for (i=0; i<limite; i++)
         {
-            listado[i].estado=LIBRE;
-            listado[i].id= 0;
+            listado[i].estado = LIBRE;
+            listado[i].id = 0;
         }
     }
     return retorno;
 }
 
-int sPelicula_buscarLugarLibre(sPelicula listado[],int limite)
+int menuPeliculas(sPelicula listado[], int limite)
+{
+    int opcion;
+    int retorno = -1;
+
+    sPelicula_inicializarLibre(listado, limite);
+
+    do
+    {
+        system("cls");
+        printf("====================================================\n");
+        printf("1.Cargar peliculas\n");
+        printf("\n");
+        printf("2.Mostrar peliculas\n");
+        printf("\n");
+        printf("3.Modificar una pelicula\n");
+        printf("\n");
+        printf("4.Borrar una pelicula\n");
+        printf("\n");
+        printf("9.Salir\n");
+        printf("====================================================\n");
+        printf("Ingrese opcion: ");
+        scanf("%d", &opcion);
+
+        switch(opcion)
+        {
+        case 1:
+            sPelicula_altaListado(listado, limite);
+            break;
+        case 2:
+            sPelicula_mostrarListado(listado, limite);
+            break;
+        case 3:
+            sPelicula_modificarPeliculaPorID(listado, limite);
+            break;
+        case 4:
+            sPelicula_borrarPelicula(listado, limite);
+            break;
+        }
+    }
+    while(opcion != 9);
+
+    return retorno;
+}
+
+int sPelicula_buscarLibre(sPelicula listado[], int limite)
 {
     int retorno = -1;
     int i;
-    if(limite > 0 && listado != NULL)
+
+    for(i=0; i<limite; i++)
     {
-        retorno = -2;
-        for(i=0; i<limite; i++)
+        if(listado[i].estado == LIBRE)
         {
-            if(listado[i].estado == LIBRE)
-            {
-                retorno = i;
-                break;
-            }
+            retorno = i;
+            break;
         }
+    }
+    if(retorno == -1)
+    {
+        printf("No queda espacio!!\n");
+        system("pause");
+        retorno = -8;
     }
     return retorno;
 }
 
-int sPelicula_siguienteId(sPelicula listado[],int limite)
+int sPelicula_alta(sPelicula listado[], int indice)
 {
-    int retorno = 0;
-    int i;
-    if(limite > 0 && listado != NULL)
-    {
-        for(i=0; i<limite; i++)
-        {
-            if(listado[i].estado == OCUPADO)
-            {
-                if(listado[i].id>retorno)
-                {
-                    retorno=listado[i].id;
-                }
-
-            }
-        }
-    }
-
-    return retorno+1;
-}
-
-
-int sPelicula_buscarPorId(sPelicula listado[],int limite, int id)
-{
-    int retorno = -1;
-    int i;
-    if(limite > 0 && listado != NULL)
-    {
-        retorno = -2;
-        for(i=0; i<limite; i++)
-        {
-            if(listado[i].estado == OCUPADO && listado[i].id == id)
-            {
-                retorno = i;
-                break;
-            }
-        }
-    }
-    return retorno;
-}
-
-
-
-int sPelicula_mostrarUno(sPelicula parametro)
-{
-    printf(" %4d  %20s  %4d  %13s  %20s\n",parametro.id,parametro.nombre,parametro.anio, parametro.nacionalidad,
-           parametro.director);
-
-}
-
-int sPelicula_mostrarListado(sPelicula listado[],int limite)
-{
-    int retorno = -1;
-    int i;
-
     system("cls");
-    printf("%4s  %20s  %4s  %4s  %20s\n", "ID", "Nombre", "Anio", "Nacionalidad", "Director");
-    printf("==============================================================\n");
-    if(limite > 0 && listado != NULL)
+    fflush(stdin);
+    printf("Ingrese nombre de la pelicula: ");
+    gets(listado[indice].nombre);
+    fflush(stdin);
+    printf("Ingrese anio de la pelicula: ");
+    scanf("%d", &listado[indice].anio);
+    fflush(stdin);
+    printf("Ingrese iniciales del pais de la pelicula: ");
+    gets(listado[indice].nacionalidad);
+    fflush(stdin);
+    printf("Ingrese director: ");
+    gets(listado[indice].director);
+    fflush(stdin);
+    printf("Ingrese ID: ");
+    scanf("%d", &listado[indice].id);
+    fflush(stdin);
+    listado[indice].estado = OCUPADO;
+
+    return 0;
+}
+
+int sPelicula_altaListado(sPelicula listado[], int limite)
+{
+    int retorno = -1;
+    int i;
+    int indice;
+    int seguir;
+
+    for(i=0; i<limite; i++)
+    {
+        indice = sPelicula_buscarLibre(listado, limite);
+        if(indice < 0)
+        {
+            break;
+        }
+        sPelicula_alta(listado, indice);
+        seguir = sPelicula_preguntarSeguirIngresando();
+        if(seguir == 1)
+        {
+            continue;
+        }
+        else
+        {
+            break;
+        }
+    }
+    return retorno;
+}
+
+int sPelicula_preguntarSeguirIngresando(void)
+{
+    int retorno;
+    char rta;
+
+    printf("=================================================\n");
+    printf("        Desea ingresar otra pelicula?\n");
+    printf("            S para Si, N para No\n");
+    printf("\n");
+    scanf("%c", &rta);
+    fflush(stdin);
+    while(rta != 's' && rta != 'S' && rta != 'n' && rta != 'N')
+    {
+        printf("Ingrese una opcion valida: ");
+        scanf("%c", &rta);
+        fflush(stdin);
+    }
+
+    if(rta == 's' || rta == 'S')
+    {
+        retorno = 1;
+    }
+    else
     {
         retorno = 0;
-        for(i=0; i<limite; i++)
-        {
-            if(listado[i].estado == OCUPADO)
-            {
+    }
+    return retorno;
+}
 
-                sPelicula_mostrarUno(listado[i]);
-            }
+int sPelicula_mostrarListado(sPelicula listado[], int limite)
+{
+    system("cls");
+    int i;
+    int retorno = -1;
+
+    printf("%5s %21s %5s %11s %21s\n", "ID", "Nombre", "Anio", "Nacionalidad", "Director");
+
+    for(i=0; i<limite; i++)
+    {
+        if(listado[i].estado == OCUPADO)
+        {
+            sPelicula_mostrarUnaPelicula(listado[i]);
         }
     }
     system("pause");
     return retorno;
 }
 
-
-int sPelicula_mostrarListadoConBorrados(sPelicula listado[],int limite)
+int sPelicula_mostrarUnaPelicula(sPelicula unaPelicula)
 {
     int retorno = -1;
-    int i;
-    if(limite > 0 && listado != NULL)
-    {
-        retorno = 0;
-        for(i=0; i<limite; i++)
-        {
-            if(listado[i].estado==LIBRE)
-            {
-                printf("\n[LIBRE]");
-            }
-            sPelicula_mostrarUno(listado[i]);
-        }
-    }
+
+    printf("%5d %21s %5d %6s %21s\n", unaPelicula.id, unaPelicula.nombre, unaPelicula.anio, unaPelicula.nacionalidad,
+           unaPelicula.director);
     return retorno;
 }
 
-
-int sPelicula_alta(sPelicula  listado[],int limite)
+int sPelicula_buscarPeliculaPorID(sPelicula listado[], int limite)
 {
-    int retorno = -1;
-    int indice;
-
-    if(limite > 0 && listado != NULL)
-    {
-        retorno = -2;
-        indice = sPelicula_buscarLugarLibre(listado,limite);
-        if(indice == -1)
-        {
-            system("cls");
-            printf("No queda espacio!");
-            system("pause");
-        }
-        else if(indice >= 0)
-        {
-            retorno = -3;
-            listado[indice].id = sPelicula_siguienteId(listado,limite);
-
-            retorno = 0;
-            fflush(stdin);
-            system("cls");
-            printf("Ingrese nombre de la pelicula: ");
-            gets(listado[indice].nombre);
-            fflush(stdin);
-            printf("Ingrese anio de la pelicula: ");
-            scanf("%d", &listado[indice].anio);
-            fflush(stdin);
-            printf("Ingrese siglas del pais de la pelicula: ");
-            gets(listado[indice].nacionalidad);
-            fflush(stdin);
-            printf("Ingrese el director: ");
-            gets(listado[indice].director);
-            fflush(stdin);
-            printf("Ingrese el identificador univoco de la pelicula: ");
-            scanf("%d", &listado[indice].id);
-            fflush(stdin);
-            listado[indice].estado = OCUPADO;
-        }
-    }
-    return retorno;
-}
-
-int sPelicula_altaListado(sPelicula listado[], int limite)
-{
-    int retorno =-1;
     int i;
-    int seguir;
+    int idBuscar;
+    int retorno = -1;
 
+    system ("cls");
+    printf("Ingrese el ID de la pelicula a buscar: ");
+    scanf("%d", &idBuscar);
     for(i=0; i<limite; i++)
     {
-        sPelicula_alta(listado, limite);
-        seguir=preguntarIngresarPelicula();
-        if(seguir == 0)
+        if(listado[i].id == idBuscar)
         {
-            break;
+            retorno = i;
         }
-        else if(seguir == 1)
-        {
-            continue;
-        }
+    }
+    if(retorno == -1)
+    {
+        printf("No se encontro la pelicula\n");
+        system("pause");
     }
     return retorno;
 }
 
-int preguntarIngresarPelicula(void)
+int sPelicula_modificarPeliculaPorID(sPelicula listado[], int limite)
 {
-    int validarNumero;
+    int indice;
+    int retorno;
     char rta;
+    int opcionModif;
 
-    do
+    indice = sPelicula_buscarPeliculaPorID(listado, limite);
+    if(indice >= 0)
     {
         system("cls");
-        printf("¿Desea ingresar otra pelicula?\n");
-        printf("    (S para Si o N para No)\n");
+        printf("Esta seguro que desea modificar esta pelicula?\n");
+        printf("        Ingrese S para Si o N para No\n");
+        printf("\n");
+        printf("%5d %21s %5d %6s %21s\n", listado[indice].id, listado[indice].nombre, listado[indice].anio,
+               listado[indice].nacionalidad, listado[indice].director);
+        printf("\n");
         fflush(stdin);
         scanf("%c", &rta);
-
-    }
-    while(rta != 's' && rta != 'S' && rta != 'n' && rta != 'N');
-    if (rta == 's' || rta == 'S')
-    {
-        validarNumero=1;
-    }
-    else if (rta == 'n' || rta == 'N')
-    {
-        validarNumero=0;
-    }
-    return validarNumero;
-}
-
-int sPelicula_ordenarNombre(sPelicula listado[], int limite)
-{
-    int retorno = -1;
-    int i;
-    int j;
-    sPelicula aux;
-
-    if(limite > 0 && listado != NULL)
-    {
-        retorno = -2;
-        for(i=0; i<limite-1; i++)
+        if(rta == 's' || rta == 's')
         {
-            for(j=i+1; j<limite; j++)
-            {
-                if(strcmp(listado[i].nombre, listado[j].nombre) > 0)
-                    aux = listado[i];
-                listado[i] = listado[j];
-                listado[j] = aux;
-            }
+            printf("1. Modificar nombre\n");
+            printf("2. Modificar anio\n");
+            printf("3. Modificar nacionalidad\n");
+            printf("4. Modificar director\n");
+            printf("\n");
+            printf("Ingrese una opcion: ");
+            scanf("%d", &opcionModif);
+
+            sPelicula_cargarDatosModificados(listado, indice, opcionModif);
+            retorno = -1;
         }
     }
+
     return retorno;
 }
 
-int menu(sPelicula listadoPeliculas[], int limite, int opcion)
+int sPelicula_cargarDatosModificados(sPelicula listado[], int indice, int opcionModif)
 {
     system("cls");
-    printf("==========================================================\n");
-    printf("1.Ingresar una pelicula\n");
-    printf("\n");
-    printf("2.Mostrar listado de peliculas\n");
-    printf("\n");
-    printf("3.Salir\n");
-    printf("============================================================\n");
-    printf("\n");
-    printf("Ingrese una opcion: ");
-    scanf("%d", &opcion);
 
-    switch(opcion)
+    switch(opcionModif)
     {
     case 1:
-        sPelicula_altaListado(listadoPeliculas, TAMANIO);
+        fflush(stdin);
+        printf("Ingrese nuevo nombre: ");
+        gets(listado[indice].nombre);
         break;
     case 2:
-        sPelicula_mostrarListado(listadoPeliculas, TAMANIO);
+        fflush(stdin);
+        printf("Ingrese nuevo anio: ");
+        scanf("%d", &listado[indice].anio);
         break;
     case 3:
+        fflush(stdin);
+        printf("Ingrese nuevas iniciales del pais: ");
+        gets(listado[indice].nacionalidad);
+        break;
+    case 4:
+        fflush(stdin);
+        printf("Ingrese nuevo director: ");
+        gets(listado[indice].director);
         break;
     }
+    return -1;
+}
 
-    return opcion;
+int sPelicula_borrarPelicula(sPelicula listado[], int limite)
+{
+    int indice;
+    int retorno;
+    char rta;
+
+    system("cls");
+
+    indice = sPelicula_buscarPeliculaPorID(listado, limite);
+    if(indice >= 0)
+    {
+        system("cls");
+        printf("Esta seguro que desea borrar esta pelicula?\n");
+        printf("        Ingrese S para Si o N para No\n");
+        printf("\n");
+        printf("%5d %21s %5d %6s %21s\n", listado[indice].id, listado[indice].nombre, listado[indice].anio,
+               listado[indice].nacionalidad, listado[indice].director);
+        printf("\n");
+        fflush(stdin);
+        scanf("%c", &rta);
+        if(rta == 's' || rta == 's')
+        {
+            printf("Pelicula borrada!");
+            listado[indice].estado = BORRADO;
+            retorno = -1;
+        }
+    }
+    return retorno;
 }

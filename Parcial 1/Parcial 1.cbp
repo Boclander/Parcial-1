@@ -31,10 +31,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../../AMB-EstructuraGenerica/EstructuraGenerica.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../AMB-EstructuraGenerica/EstructuraGenerica.h" />
 		<Unit filename="Directores.c">
 			<Option compilerVar="CC" />
 		</Unit>
