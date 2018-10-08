@@ -30,6 +30,7 @@ int menuPeliculas(sPelicula listado[], int limite)
     int retorno = -1;
 
     sPelicula_inicializarLibre(listado, limite);
+    //sPelicula_cargarPeliculasHardcode(listado, limite);
 
     do
     {
@@ -43,7 +44,7 @@ int menuPeliculas(sPelicula listado[], int limite)
         printf("\n");
         printf("4.Borrar una pelicula\n");
         printf("\n");
-        printf("9.Salir\n");
+        printf("5.Salir\n");
         printf("====================================================\n");
         printf("Ingrese opcion: ");
         scanf("%d", &opcion);
@@ -64,7 +65,7 @@ int menuPeliculas(sPelicula listado[], int limite)
             break;
         }
     }
-    while(opcion != 9);
+    while(opcion != 5);
 
     return retorno;
 }
@@ -320,3 +321,28 @@ int sPelicula_borrarPelicula(sPelicula listado[], int limite)
     }
     return retorno;
 }
+
+/*int sPelicula_cargarPeliculasHardcode(sPelicula listado[], int limite)
+{
+    int i;
+    char nombres[10][21]={"Beetlejuice", "Relatos salvajes", "Princess Mononoke",
+        "Infinity War", "Captain America", "Corpse Bride", "Pulp fiction", "Men in Black",
+        "Ice Age", "Your Name", "Spiderman"};
+    int anios[10][5] ={1995, 2015, 2006, 2018, 2015, 2007, 1999, 2006, 2004, 2016, 2008};
+    int ids[10][4]={100, 101, 102, 103, 104, 105, 106, 107, 108, 109};
+    char nacionalidades[10][4] ={"USA", "ARG", "JPN", "USA", "USA", "GBT", "USA", "FRA", "FRA", "JPN", "USA"};
+    char directores[10][42] ={"Tim Burton", "Juan Jose Campanella", "Robert Miyazaki", "Dale Carnerige", "Dale Carnerige"
+        , "Tim Burton", "Will Smith", "Will Smith", "Joseph Miner", "Hisaki Masashi", "Dale Carnerige"};
+
+    for(i=0; i<limite; i++)
+    {
+        strcpy(listado[i].nombre, nombres[i]);
+        listado[i].anio = anios[i];
+        listado[i].id = ids[i];
+        strcpy(listado[i].nacionalidad, nacionalidades[i]);
+        strcpy(listado[i].director, directores[i]);
+        listado[i].estado = OCUPADO;
+    }
+    return 0;
+}
+*/

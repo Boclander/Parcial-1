@@ -115,4 +115,6 @@ int sPelicula_cargarDatosModificados(sPelicula[], int, int);
  *
  */
 int sPelicula_borrarPelicula(sPelicula[], int);
+
+int sPelicula_cargarPeliculasHardcode(sPelicula[], int);
 #endif // Peliculas
